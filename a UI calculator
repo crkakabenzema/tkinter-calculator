@@ -1,0 +1,43 @@
+class Counter():
+    import tkinter as tk
+    from tkinter import tix
+    def __init__(self,master = None):
+        self.window = self.tix.Tk()
+        self.window.minsize(720,650)
+        self.set_menu()
+        self.lable_show = self.tk.Label(text='', anchor='se', font=('黑体', 30),bg='white', fg='black')
+        self.lable_show.place(x=3,y=3,width=710,height=72)
+        self.set_buttons()
+        self.window.mainloop()
+    def set_menu(self):                                #menu set
+        menubar = self.tk.Menu(self.window)
+        filemenu = self.tk.Menu(menubar, tearoff=0)
+        filemenu.add_command(label="exit", command=self.window.destroy)
+        menubar.add_cascade(label="操作", menu=filemenu)
+        self.window.config(menu=menubar) 
+    def set_buttons(self):                          #button set
+        str = self.tk.StringVar()
+        str = '789+456-123*0.()/C=A'
+        for i in range(20):
+            self.tk.Button(text=str[i]).place(x=(i%4)*60,y=(int(i/4)+1)*90,width=60,height=60)
+          # cmd='bt%d=self.tk.Button(text=str[%d])' % (i,i)
+          # exec(cmd)
+            bt0=self.tk.Button(text=str[i])
+        bt0.bind_class('Button','<Button-1>', self.click_button)
+    def click_button(self,e):
+        font = e.widget['text']
+        self.lable_show['text'] += font
+        if self.lable_show['text'][-1] == 'C':         #cancel the number entered
+            cancel_res = self.lable_show['text'][:-2]
+            self.lable_show['text'] = cancel_res
+        if self.lable_show['text'][-1] == 'A':         #clear the monitor
+            self.lable_show['text'] = ' '
+        if self.lable_show['text'][-1] == '=':
+             res = eval(self.lable_show['text'][:-1])
+             self.lable_show['text'] = str(round(float(res), 5))
+        if self.lable_show['text'][-1] in ['+','-','*','/'] and self.lable_show['text'][-2] in ['+','-','*','/']:  #ensure not to input double mark
+            header = self.lable_show['text'][:-2]
+            footer = self.lable_show['text'][-1]
+            self.lable_show['text'] = header+footer
+        if self.lable_show['text'][-1] in ['0'] and self.lable_show['text'][-2] in ['/']:  #display Error when overing zero
+            self.lable_show['text'] = 'Error'
